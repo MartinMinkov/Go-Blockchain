@@ -6,11 +6,11 @@ import (
 )
 
 type ProtocolState struct {
-	Timestamp  int64 `json:"timestamp"`
-	Hash       string `json: "hash"`
-	LastHash string `json: "lastHash"`
-	Difficulty int `json: "difficulty"`
-	Nonce      int `json: "nonce"`
+	Timestamp  int64  `json:"timestamp"`
+	Hash       string `json:"hash"`
+	LastHash   string `json:"lastHash"`
+	Difficulty int    `json:"difficulty"`
+	Nonce      int    `json:"nonce"`
 }
 
 const MINE_RATE = 200 // in ms
@@ -18,15 +18,15 @@ const MINE_RATE = 200 // in ms
 type Data string
 
 type Block struct {
-ProtocolState
-Data	
+	ProtocolState `json:"ProtocolState"`
+	Data          `json:"Data"`
 }
 
 func makeGenesis() Block {
 	return Block{
 		ProtocolState: ProtocolState{
 			Timestamp:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC).UnixNano() / int64(time.Millisecond),
-			LastHash:  "",
+			LastHash:   "",
 			Hash:       "genesis-hash",
 			Difficulty: 3,
 			Nonce:      0,
@@ -68,7 +68,7 @@ func mineBlock(old_b Block, d Data) Block {
 	return Block{
 		ProtocolState: ProtocolState{
 			Timestamp:  curr_timestamp,
-			LastHash:  old_b.ProtocolState.Hash,
+			LastHash:   old_b.ProtocolState.Hash,
 			Difficulty: difficulty,
 			Nonce:      nonce,
 			Hash:       b_hash,
