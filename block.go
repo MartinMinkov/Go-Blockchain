@@ -5,39 +5,39 @@ import (
 	"time"
 )
 
-type protocol_state struct {
-	timestamp  int64
-	hash       string
-	last_hash  string
-	difficulty int
-	nonce      int
+type ProtocolState struct {
+	Timestamp  int64 `json:"timestamp"`
+	Hash       string `json: "hash"`
+	LastHash string `json: "lastHash"`
+	Difficulty int `json: "difficulty"`
+	Nonce      int `json: "nonce"`
 }
 
 const MINE_RATE = 200 // in ms
 
-type data string
+type Data string
 
-type block struct {
-	protocol_state
-	data
+type Block struct {
+ProtocolState
+Data	
 }
 
-func makeGenesis() block {
-	return block{
-		protocol_state: protocol_state{
-			timestamp:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC).UnixNano() / int64(time.Millisecond),
-			last_hash:  "",
-			hash:       "genesis-hash",
-			difficulty: 3,
-			nonce:      0,
+func makeGenesis() Block {
+	return Block{
+		ProtocolState: ProtocolState{
+			Timestamp:  time.Date(2009, time.November, 10, 23, 0, 0, 0, time.UTC).UnixNano() / int64(time.Millisecond),
+			LastHash:  "",
+			Hash:       "genesis-hash",
+			Difficulty: 3,
+			Nonce:      0,
 		},
-		data: "",
+		Data: "",
 	}
 }
 
-func mineBlock(old_b block, d data) block {
+func mineBlock(old_b Block, d Data) Block {
 	var wanted_nonce []string
-	for i := 0; i < old_b.protocol_state.difficulty; i++ {
+	for i := 0; i < old_b.ProtocolState.Difficulty; i++ {
 		wanted_nonce = append(wanted_nonce, "0")
 	}
 
@@ -55,25 +55,25 @@ func mineBlock(old_b block, d data) block {
 		h.nonce = nonce
 
 		b_hash = hash(h)
-		if b_hash[:old_b.protocol_state.difficulty] == strings.Join(wanted_nonce, "") {
+		if b_hash[:old_b.ProtocolState.Difficulty] == strings.Join(wanted_nonce, "") {
 			mine = false
 		}
 	}
 
 	difficulty := determineDifficulty(
-		old_b.protocol_state.timestamp,
+		old_b.ProtocolState.Timestamp,
 		curr_timestamp,
-		old_b.difficulty)
+		old_b.ProtocolState.Difficulty)
 
-	return block{
-		protocol_state: protocol_state{
-			timestamp:  curr_timestamp,
-			last_hash:  old_b.protocol_state.hash,
-			difficulty: difficulty,
-			nonce:      nonce,
-			hash:       b_hash,
+	return Block{
+		ProtocolState: ProtocolState{
+			Timestamp:  curr_timestamp,
+			LastHash:  old_b.ProtocolState.Hash,
+			Difficulty: difficulty,
+			Nonce:      nonce,
+			Hash:       b_hash,
 		},
-		data: d,
+		Data: d,
 	}
 }
 

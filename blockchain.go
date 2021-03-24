@@ -2,19 +2,21 @@ package main
 
 import "fmt"
 
-type blockchain []block
+type Blockchain []Block
 
-func makeBlockchain() blockchain {
-	return blockchain{makeGenesis()}
+var Mainchain Blockchain
+
+func makeBlockchain() Blockchain {
+	return Blockchain{makeGenesis()}
 }
 
-func (bs *blockchain) addBlock(d data) {
+func (bs *Blockchain) addBlock(d Data) {
 	old_b := (*bs)[len(*bs)-1]
 	b := mineBlock(old_b, d)
 	*bs = append(*bs, b)
 }
 
-func isValidBlockchain(bs blockchain) bool {
+func isValidBlockchain(bs Blockchain) bool {
 	if bs[0] != makeGenesis() {
 		return false
 	}
@@ -23,29 +25,29 @@ func isValidBlockchain(bs blockchain) bool {
 		b := bs[i]
 
 		hash_i := hash_input{
-			timestamp:  b.protocol_state.timestamp,
-			hash:       b.protocol_state.hash,
-			last_hash:  b.protocol_state.last_hash,
-			difficulty: b.protocol_state.difficulty,
-			nonce:      b.protocol_state.nonce,
-			data:       b.data,
+			timestamp:  b.ProtocolState.Timestamp,
+			hash:       b.ProtocolState.Hash,
+			last_hash:  b.ProtocolState.LastHash,
+			difficulty: b.ProtocolState.Difficulty,
+			nonce:      b.ProtocolState.Nonce,
+			data:       b.Data,
 		}
 
-		expected_last_hash := bs[i-1].protocol_state.hash
+		expected_last_hash := bs[i-1].ProtocolState.Hash
 		expected_hash := bin_hash(hash_i)
 
-		lastDifficulty := bs[i-1].protocol_state.difficulty
+		lastDifficulty := bs[i-1].ProtocolState.Difficulty
 
-		if b.protocol_state.last_hash != expected_last_hash ||
-			b.protocol_state.hash != expected_hash ||
-			(b.protocol_state.difficulty-lastDifficulty) > 1 {
+		if b.ProtocolState.LastHash!= expected_last_hash ||
+			b.ProtocolState.Hash!= expected_hash ||
+			(b.ProtocolState.Difficulty-lastDifficulty) > 1 {
 			return false
 		}
 	}
 	return true
 }
 
-func replaceBlockchain(bs_curr blockchain, bs_new blockchain) blockchain {
+func replaceBlockchain(bs_curr Blockchain, bs_new Blockchain) Blockchain {
 	if len(bs_new) >= len(bs_curr) && isValidBlockchain(bs_new) {
 		return bs_new
 	} else {
@@ -53,7 +55,7 @@ func replaceBlockchain(bs_curr blockchain, bs_new blockchain) blockchain {
 	}
 }
 
-func equal(bs1 blockchain, bs2 blockchain) bool {
+func equal(bs1 Blockchain, bs2 Blockchain) bool {
 	if len(bs1) != len(bs2) {
 		return false
 	}
@@ -69,7 +71,7 @@ func equal(bs1 blockchain, bs2 blockchain) bool {
 	return true
 }
 
-func (bs blockchain) print() {
+func (bs Blockchain) print() {
 	for _, b := range bs {
 		fmt.Println(b)
 	}

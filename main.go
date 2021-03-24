@@ -1,14 +1,35 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"log"
+	"net/http"
 )
 
+func homePage(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Welcome to the HomePage!")
+	fmt.Println("Endpoint Hit: homePage")
+}
+
+func handleRequests() {
+	http.HandleFunc("/", homePage)
+	http.HandleFunc("/blocks", returnAllBlocks)
+	log.Fatal(http.ListenAndServe(":8000", nil))
+	fmt.Println("Listening on port 8000")
+}
+
+func returnAllBlocks(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("Endpoint Hit: returnAllBlocks")
+	fmt.Println(json.NewEncoder(w).Encode(Mainchain))
+}
+
 func main() {
-	b := makeGenesis()
-	b2 := mineBlock(b, "data")
+	Mainchain = makeBlockchain()
+	Mainchain.addBlock("This")
+	Mainchain.addBlock("Is")
+	Mainchain.addBlock("A")
+	Mainchain.addBlock("Test")
 
-	fmt.Println(b)
-	fmt.Println(b2)
-
+	handleRequests()
 }

@@ -13,17 +13,17 @@ type hash_input struct {
 	last_hash  string
 	difficulty int
 	nonce      int
-	data       data
+	data       Data
 }
 
-func makeFromBlock(b block) hash_input {
+func makeFromBlock(b Block) hash_input {
 	return hash_input{
-		timestamp:  b.protocol_state.timestamp,
-		hash:       b.protocol_state.hash,
-		last_hash:  b.protocol_state.last_hash,
-		difficulty: b.protocol_state.difficulty,
-		nonce:      b.protocol_state.nonce,
-		data:       b.data,
+		timestamp:  b.ProtocolState.Timestamp,
+		hash:       b.ProtocolState.Hash,
+		last_hash:  b.ProtocolState.LastHash,
+		difficulty: b.ProtocolState.Difficulty,
+		nonce:      b.ProtocolState.Nonce,
+		data:       b.Data,
 	}
 }
 
