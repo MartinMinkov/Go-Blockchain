@@ -15,13 +15,13 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 func handleRequests() {
 	http.HandleFunc("/", homePage)
 	http.HandleFunc("/blocks", returnAllBlocks)
-	log.Fatal(http.ListenAndServe(":8000", nil))
 	fmt.Println("Listening on port 8000")
+	log.Fatal(http.ListenAndServe(":8000", nil))
 }
 
 func returnAllBlocks(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("Endpoint Hit: returnAllBlocks")
-	fmt.Println(json.NewEncoder(w).Encode(Mainchain))
+	json.NewEncoder(w).Encode(Mainchain)
 }
 
 func main() {
