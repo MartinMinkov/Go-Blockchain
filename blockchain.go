@@ -4,8 +4,6 @@ import "fmt"
 
 type Blockchain []Block
 
-var Mainchain Blockchain
-
 func makeBlockchain() Blockchain {
 	return Blockchain{makeGenesis()}
 }
@@ -38,8 +36,8 @@ func isValidBlockchain(bs Blockchain) bool {
 
 		lastDifficulty := bs[i-1].ProtocolState.Difficulty
 
-		if b.ProtocolState.LastHash!= expected_last_hash ||
-			b.ProtocolState.Hash!= expected_hash ||
+		if b.ProtocolState.LastHash != expected_last_hash ||
+			b.ProtocolState.Hash != expected_hash ||
 			(b.ProtocolState.Difficulty-lastDifficulty) > 1 {
 			return false
 		}
