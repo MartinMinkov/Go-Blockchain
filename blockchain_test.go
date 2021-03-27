@@ -6,10 +6,12 @@ import (
 
 func TestBlockChainStartsWithGenesis(t *testing.T) {
 	bc := makeBlockchain()
-	genesis_hash := makeGenesis().protocol_state.hash
+	genesisHash := makeGenesis().ProtocolState.Hash
 
-	if genesis_hash != bc[0].protocol_state.hash {
-		t.Fatalf("Expected genesis hash of (%v) but got hash (%v) instead", genesis_hash, bc[0].protocol_state.hash)
+	if genesisHash != bc[0].ProtocolState.Hash {
+		t.Fatalf("Expected genesis hash of (%v) but got hash (%v) instead",
+			genesisHash,
+			bc[0].ProtocolState.Hash)
 	}
 }
 
@@ -44,7 +46,7 @@ func TestInvalidBlockchain(t *testing.T) {
 	bc.addBlock("Is")
 	bc.addBlock("It?")
 
-	bc[2].data = "invalid-data"
+	bc[2].Data = "invalid-data"
 
 	if isValidBlockchain(bc) {
 		t.Fatalf("Expected invalid blockchain to be false, instead got true")
@@ -96,7 +98,7 @@ func TestReplaceInvalidBlockchain(t *testing.T) {
 	bc2.addBlock("We")
 	bc2.addBlock("Shall")
 	bc2.addBlock("Surpass!")
-	bc2[3].data = "Fail!"
+	bc2[3].Data = "Fail!"
 
 	replaced_bc := replaceBlockchain(bc1, bc2)
 	if !equal(replaced_bc, bc1) {
@@ -111,7 +113,7 @@ func TestBlockWithJumpedDifficulty(t *testing.T) {
 	bc.addBlock("Shall")
 	bc.addBlock("Surpass!")
 
-	bc[2].protocol_state.difficulty = 0
+	bc[2].ProtocolState.Difficulty = 0
 
 	if isValidBlockchain(bc) {
 		t.Fatalf("Expected invalid blockchain to be false, instead got true")

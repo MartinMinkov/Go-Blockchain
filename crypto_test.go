@@ -7,9 +7,11 @@ import (
 func TestHashReturnsValidHash(t *testing.T) {
 	b := makeGenesis()
 	h := makeFromBlock(b)
-	hashed_data := hash(h)
-	if len(hashed_data) < 64 {
-		t.Fatalf("Hash has length (%v) but needs (%v)", len(hashed_data), 64)
+	hashedData := hash(h)
+	if len(hashedData) < 64 {
+		t.Fatalf("Hash has length (%v) but needs (%v)",
+			len(hashedData),
+			64)
 	}
 }
 
@@ -17,10 +19,12 @@ func TestSameInputReturnsSameHash(t *testing.T) {
 	b := makeGenesis()
 	h := makeFromBlock(b)
 
-	hashed_data := hash(h)
-	hashed_data_dup := hash(h)
+	hashedData := hash(h)
+	hashedDataDup := hash(h)
 
-	if hashed_data != hashed_data_dup {
-		t.Fatalf("Expected (%v), got instead (%v)", hashed_data, hashed_data_dup)
+	if hashedData != hashedDataDup {
+		t.Fatalf("Expected (%v), got instead (%v)",
+			hashedData,
+			hashedDataDup)
 	}
 }
