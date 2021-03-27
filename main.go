@@ -58,6 +58,7 @@ func createBlock(w http.ResponseWriter, r *http.Request) {
 	}
 
 	Mainchain.addBlock(Data(t.Data))
+	BClient.publish(Mainchain)
 	json.NewEncoder(w).Encode(Mainchain)
 }
 
