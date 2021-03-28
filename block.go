@@ -42,7 +42,7 @@ func mineBlock(oldBlock Block, d Data) Block {
 	}
 
 	var b_hash string
-	h := hash_input{}
+	h := HashInput{}
 	h.lastHash = oldBlock.ProtocolState.Hash
 	h.data = d
 

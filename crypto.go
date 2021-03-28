@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-type hash_input struct {
+type HashInput struct {
 	timestamp  int64
 	lastHash   string
 	difficulty int
@@ -15,8 +15,8 @@ type hash_input struct {
 	data       Data
 }
 
-func makeFromBlock(b Block) hash_input {
-	return hash_input{
+func makeFromBlock(b Block) HashInput {
+	return HashInput{
 		timestamp:  b.ProtocolState.Timestamp,
 		lastHash:   b.ProtocolState.LastHash,
 		difficulty: b.ProtocolState.Difficulty,
@@ -25,7 +25,7 @@ func makeFromBlock(b Block) hash_input {
 	}
 }
 
-func toString(h hash_input) []byte {
+func toString(h HashInput) []byte {
 	return []byte(strconv.Itoa(int(h.timestamp)) + " " +
 		h.lastHash + " " +
 		strconv.Itoa(h.difficulty) + " " +
@@ -33,16 +33,15 @@ func toString(h hash_input) []byte {
 		string(h.data))
 }
 
-func hash(h_input hash_input) string {
-	data := toString(h_input)
+func hash(h HashInput) string {
+	data := toString(h)
 	hasher := sha256.New()
 	hasher.Write(data)
-
 	return (hex.EncodeToString(hasher.Sum(nil)))
 }
 
-func bin_hash(h_input hash_input) string {
-	data := hash(h_input)
+func bin_hash(h HashInput) string {
+	data := hash(h)
 	return stringToBin(data)
 }
 
