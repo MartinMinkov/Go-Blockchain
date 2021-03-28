@@ -30,9 +30,9 @@ func handleRequests() {
 	r.HandleFunc("/api/blocks", returnAllBlocks).Methods("GET")
 	r.HandleFunc("/api/mine", createBlock).Methods("POST")
 
-	port := ":" + strconv.FormatInt(int64(PORT), 10)
-	fmt.Printf("Listening on port %v\n", port)
-	log.Fatal(http.ListenAndServe(port, r))
+	listenPort := ":" + strconv.FormatInt(int64(PORT), 10)
+	fmt.Printf("Listening on port %v\n", listenPort)
+	log.Fatal(http.ListenAndServe(listenPort, r))
 }
 
 func returnAllBlocks(w http.ResponseWriter, r *http.Request) {
@@ -78,7 +78,6 @@ func main() {
 	BClient = Client()
 	go BClient.listen()
 
-	BClient.publish(Mainchain)
+	BClient.publish(SYNC_EVENT)
 	handleRequests()
-
 }

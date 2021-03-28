@@ -9,8 +9,7 @@ import (
 
 type hash_input struct {
 	timestamp  int64
-	hash       string
-	last_hash  string
+	lastHash   string
 	difficulty int
 	nonce      int
 	data       Data
@@ -19,8 +18,7 @@ type hash_input struct {
 func makeFromBlock(b Block) hash_input {
 	return hash_input{
 		timestamp:  b.ProtocolState.Timestamp,
-		hash:       b.ProtocolState.Hash,
-		last_hash:  b.ProtocolState.LastHash,
+		lastHash:   b.ProtocolState.LastHash,
 		difficulty: b.ProtocolState.Difficulty,
 		nonce:      b.ProtocolState.Nonce,
 		data:       b.Data,
@@ -29,8 +27,7 @@ func makeFromBlock(b Block) hash_input {
 
 func toString(h hash_input) []byte {
 	return []byte(strconv.Itoa(int(h.timestamp)) + " " +
-		h.hash + " " +
-		h.last_hash + " " +
+		h.lastHash + " " +
 		strconv.Itoa(h.difficulty) + " " +
 		strconv.Itoa(h.nonce) + " " +
 		string(h.data))

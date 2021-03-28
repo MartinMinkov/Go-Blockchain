@@ -35,45 +35,41 @@ func makeGenesis() Block {
 	}
 }
 
-func mineBlock(old_b Block, d Data) Block {
-	var wanted_nonce []string
-	for i := 0; i < old_b.ProtocolState.Difficulty; i++ {
-		wanted_nonce = append(wanted_nonce, "0")
+func mineBlock(oldBlock Block, d Data) Block {
+	var wantedNonce []string
+	for i := 0; i < oldBlock.ProtocolState.Difficulty; i++ {
+		wantedNonce = append(wantedNonce, "0")
 	}
 
-	h := makeFromBlock(old_b)
 	var b_hash string
-	var curr_timestamp int64
-	var nonce int
+	h := hash_input{}
+	h.lastHash = oldBlock.ProtocolState.Hash
+	h.data = d
 
 	mine := true
 	for mine {
-		curr_timestamp = makeTimestamp()
-		nonce = nonce + 1
-
-		h.timestamp = curr_timestamp
-		h.nonce = nonce
+		h.timestamp = makeTimestamp()
+		h.nonce = h.nonce + 1
+		h.difficulty = determineDifficulty(
+			oldBlock.ProtocolState.Timestamp,
+			h.timestamp,
+			oldBlock.ProtocolState.Difficulty)
 
 		b_hash = hash(h)
-		if b_hash[:old_b.ProtocolState.Difficulty] == strings.Join(wanted_nonce, "") {
+		if b_hash[:oldBlock.ProtocolState.Difficulty] == strings.Join(wantedNonce, "") {
 			mine = false
 		}
 	}
 
-	difficulty := determineDifficulty(
-		old_b.ProtocolState.Timestamp,
-		curr_timestamp,
-		old_b.ProtocolState.Difficulty)
-
 	return Block{
 		ProtocolState: ProtocolState{
-			Timestamp:  curr_timestamp,
-			LastHash:   old_b.ProtocolState.Hash,
-			Difficulty: difficulty,
-			Nonce:      nonce,
+			Timestamp:  h.timestamp,
+			LastHash:   h.lastHash,
+			Difficulty: h.difficulty,
+			Nonce:      h.nonce,
 			Hash:       b_hash,
 		},
-		Data: d,
+		Data: h.data,
 	}
 }
 

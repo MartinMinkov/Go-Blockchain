@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/go-redis/redis/v8"
 )
@@ -11,6 +12,7 @@ import (
 var ctx = context.Background()
 var TEST_CHANNEL = "TEST_CHANNEL"
 var BLOCKCHAIN_CHANNEL = "BLOCKCHAIN_CHANNEL"
+var SYNC_EVENT = "STARTUP-SYNC"
 
 type BlockchainClient struct {
 	client  *redis.Client
@@ -33,7 +35,13 @@ func (b BlockchainClient) listen() {
 	ch := b.pubsub.Channel()
 	for msg := range ch {
 		fmt.Println(msg.Channel, msg.Payload)
-		handleBlockchainPublish(msg.Payload)
+
+		if strings.Contains(msg.Payload, SYNC_EVENT) {
+			b.publish(Mainchain)
+		} else {
+			handleBlockchainPublish(msg.Payload)
+		}
+
 	}
 }
 
@@ -52,5 +60,5 @@ func handleBlockchainPublish(payload string) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	Mainchain = replaceBlockchain(Mainchain, newChain)
+	Mainchain.replaceBlockchain(&newChain)
 }

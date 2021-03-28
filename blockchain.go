@@ -9,8 +9,8 @@ func makeBlockchain() Blockchain {
 }
 
 func (bs *Blockchain) addBlock(d Data) {
-	old_b := (*bs)[len(*bs)-1]
-	b := mineBlock(old_b, d)
+	oldBlock := (*bs)[len(*bs)-1]
+	b := mineBlock(oldBlock, d)
 	*bs = append(*bs, b)
 }
 
@@ -22,34 +22,28 @@ func isValidBlockchain(bs Blockchain) bool {
 	for i := 1; i < len(bs); i++ {
 		b := bs[i]
 
-		hash_i := hash_input{
-			timestamp:  b.ProtocolState.Timestamp,
-			hash:       b.ProtocolState.Hash,
-			last_hash:  b.ProtocolState.LastHash,
-			difficulty: b.ProtocolState.Difficulty,
-			nonce:      b.ProtocolState.Nonce,
-			data:       b.Data,
+		lastDifficulty := bs[i-1].ProtocolState.Difficulty
+		expectedLastHash := bs[i-1].ProtocolState.Hash
+		expectedHash := hash(makeFromBlock(b))
+
+		if b.ProtocolState.LastHash != expectedLastHash {
+			return false
 		}
 
-		expected_last_hash := bs[i-1].ProtocolState.Hash
-		expected_hash := bin_hash(hash_i)
+		if b.ProtocolState.Hash != expectedHash {
+			return false
+		}
 
-		lastDifficulty := bs[i-1].ProtocolState.Difficulty
-
-		if b.ProtocolState.LastHash != expected_last_hash ||
-			b.ProtocolState.Hash != expected_hash ||
-			(b.ProtocolState.Difficulty-lastDifficulty) > 1 {
+		if b.ProtocolState.Difficulty-lastDifficulty > 1 {
 			return false
 		}
 	}
 	return true
 }
 
-func replaceBlockchain(bs_curr Blockchain, bs_new Blockchain) Blockchain {
-	if len(bs_new) >= len(bs_curr) && isValidBlockchain(bs_new) {
-		return bs_new
-	} else {
-		return bs_curr
+func (bs *Blockchain) replaceBlockchain(bsNew *Blockchain) {
+	if len(*bsNew) >= len(*bs) && isValidBlockchain(*bsNew) {
+		*bs = *bsNew
 	}
 }
 
