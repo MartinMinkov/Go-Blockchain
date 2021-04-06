@@ -55,7 +55,7 @@ func mineBlock(oldBlock Block, d Data) Block {
 			h.timestamp,
 			oldBlock.ProtocolState.Difficulty)
 
-		b_hash = hash(h)
+		b_hash = hexHash(h)
 		if b_hash[:oldBlock.ProtocolState.Difficulty] == strings.Join(wantedNonce, "") {
 			mine = false
 		}

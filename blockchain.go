@@ -24,7 +24,7 @@ func isValidBlockchain(bs Blockchain) bool {
 
 		lastDifficulty := bs[i-1].ProtocolState.Difficulty
 		expectedLastHash := bs[i-1].ProtocolState.Hash
-		expectedHash := hash(makeFromBlock(b))
+		expectedHash := hexHash(makeFromBlock(b))
 
 		if b.ProtocolState.LastHash != expectedLastHash {
 			return false
