@@ -9,9 +9,10 @@ type Wallet struct {
 }
 
 func CreateWallet() Wallet {
+	privateKey, publicKey := generateKeypair()
 	return Wallet{
-		PublicKey:  "pub-key",
-		PrivateKey: "priv-key",
+		PublicKey:  publicKey,
+		PrivateKey: privateKey,
 		Balance:    STARTING_BALANCE,
 	}
 }

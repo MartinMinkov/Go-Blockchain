@@ -57,10 +57,11 @@ func stringToBin(s string) (binString string) {
 	return
 }
 
-func generateKeypair() (*ecdsa.PrivateKey, ecdsa.PublicKey, error) {
+func generateKeypair() (string, string) {
 	pubkeyCurve := elliptic.P256()
-	privateKey, err := ecdsa.GenerateKey(pubkeyCurve, rand.Reader)
-	return privateKey, privateKey.PublicKey, err
+	privateKey, _ := ecdsa.GenerateKey(pubkeyCurve, rand.Reader)
+	privateKeyEncoded, publicKeyEncoded := encode(privateKey, &privateKey.PublicKey)
+	return privateKeyEncoded, publicKeyEncoded
 
 }
 
